@@ -5,6 +5,8 @@ public class SpawnerController : MonoBehaviour
 {
     public GameObject Cube;
     public GameObject HalfCube;
+    public GameObject HalfWidthCube;
+    public GameObject DoubleCube;
     public GameObject Beam;
 
     private List<GameObject> SpawnList;
@@ -17,6 +19,12 @@ public class SpawnerController : MonoBehaviour
             Cube,
             HalfCube,
             HalfCube,
+            DoubleCube,
+            Beam,
+            Beam,
+            DoubleCube,
+            HalfWidthCube,
+            HalfWidthCube,
             Cube,
             Beam,
             Beam,

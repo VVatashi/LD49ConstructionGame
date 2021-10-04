@@ -13,7 +13,7 @@ public class CraneController : MonoBehaviour
     public AudioSource CarrierSound;
     public AudioSource GrabSound;
 
-    public float CarrierSpeed = 1;
+    public float CarrierMaxSpeed = 1;
     public float CarrierXMin = 0;
     public float CarrierXMax = 0;
 
@@ -23,6 +23,7 @@ public class CraneController : MonoBehaviour
 
     private InputAction MoveInputAction;
 
+    private float CarrierSpeed;
     private bool HasCargo = false;
     private bool MovingCarrier = false;
     private bool CarrierSoundPlaying = false;
@@ -47,11 +48,16 @@ public class CraneController : MonoBehaviour
     {
         Vector2 move = MoveInputAction.ReadValue<Vector2>();
 
-        float newCarrierPos = Carrier.position.x + move.x * Time.deltaTime * CarrierSpeed;
-        float clampedCarrierPos = Mathf.Clamp(newCarrierPos, CarrierXMin, CarrierXMax);
-        Carrier.position = new Vector2(clampedCarrierPos, Carrier.position.y);
+        CarrierSpeed += 0.9f * move.x * 50 * Time.fixedDeltaTime;
+        CarrierSpeed = Mathf.Clamp(CarrierSpeed, -CarrierMaxSpeed, CarrierMaxSpeed);
 
-        float newHookDistance = HookJoint.distance - move.y * Time.deltaTime * HookSpeed;
+        float newCarrierPos = Carrier.position.x + CarrierSpeed * Time.fixedDeltaTime;
+        float clampedCarrierPos = Mathf.Clamp(newCarrierPos, CarrierXMin, CarrierXMax);
+        Carrier.MovePosition(new Vector2(clampedCarrierPos, Carrier.position.y));
+
+        CarrierSpeed *= 0.9f;
+
+        float newHookDistance = HookJoint.distance - move.y * Time.fixedDeltaTime * HookSpeed;
         HookJoint.distance = Mathf.Clamp(newHookDistance, HookDistanceMin, HookDistanceMax);
 
         MovingCarrier = move.sqrMagnitude > 0.5f;
